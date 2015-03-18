@@ -16,7 +16,7 @@ class Bike
 
     //member functions
     public:
-        Bike(); //constructor
+        Bike(int); //constructor
         void setDestination(int); //set the dock number for bike return
         void setStartTime(int); //set the loan period start time
         void updateLoan(); //updates the remaining time during simulation
@@ -25,7 +25,7 @@ class Bike
         int getStartTime(); //returns time when loan period began
         int getRemainingTime(); //returns remaining time until loan period expires
         bool loanExpired(); //checks if the loan period for bike has expired
-        ~Bike(); //deconstructor
+        ~Bike(); //destructor
 };
 
 #endif // BIKE_H

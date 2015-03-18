@@ -2,13 +2,21 @@
 
 using namespace std;
 
-DockingStation::DockingStation()
-{
-    capacity = 20;
+DockingStation::DockingStation(){}
+
+bool DockingStation::bikeAvailable(){
+    return (dock.size()) ? true : false ;
 }
 
-DockingStation::~DockingStation()
-{
-
+Bike DockingStation::despatchBike(){
+    Bike bike = dock.top();
+    dock.pop();
+    return bike;
 }
+
+void DockingStation::dockBike(Bike id){
+    dock.push(id);
+}
+
+DockingStation::~DockingStation(){}
 
