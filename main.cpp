@@ -7,6 +7,31 @@
 
 using namespace std;
 
+//prints the bikes docked in each docking station
+void printDockingStations(vector<Bike> v1,vector<Bike> v2,vector<Bike> v3,vector<Bike> v4 ){
+    cout << "\n  Docking station" << "\t\tBikes Available" << endl;
+
+    cout << "\n\tDS-1\t\t ";
+    for(Bike b : v1){
+        cout << setw(5)<< right  << b.getBikeID();
+    }
+
+    cout << "\n\tDS-2\t\t ";
+    for(Bike b : v2){
+        cout << setw(5)<< right  << b.getBikeID();
+    }
+
+    cout << "\n\tDS-3\t\t ";
+    for(Bike b : v3){
+        cout << setw(5)<< right << b.getBikeID();
+    }
+
+    cout << "\n\tDS-4\t\t ";
+    for(Bike b : v4){
+        cout << setw(5)<< right << b.getBikeID();
+    }
+}
+
 int main(){
 
     //SET STARTUP CONDITIONS
@@ -61,26 +86,7 @@ int main(){
     cout << "\t\tWELCOME TO ACSE BIKES TRACKER\n\n" << endl;
     cout << "Current status of docking stations..." << endl;
 
-    cout << "\nDocking station" << "\t\t\t\tBikes Available" << endl;
-    cout << "\n\t1\t\t\t";
-    for(Bike b : vec1){
-        cout << right << setw(8) << "bike-" << b.getBikeID();
-    }
-
-    cout << "\n\t2\t\t\t";
-    for(Bike b : vec2){
-        cout << right << setw(8) << "bike-" << b.getBikeID();
-    }
-
-    cout << "\n\t3\t\t\t";
-    for(Bike b : vec3){
-        cout << right << setw(8) <<  "bike-" << b.getBikeID();
-    }
-
-    cout << "\n\t4\t\t\t";
-    for(Bike b : vec4){
-        cout << right << setw(8) <<  "bike-" << b.getBikeID();
-    }
+    printDockingStations(vec1,vec2,vec3,vec4);
 
     cout << endl;
 
