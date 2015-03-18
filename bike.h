@@ -21,6 +21,7 @@ class Bike
         void setStartTime(int); //set the loan period start time
         void updateLoan(); //updates the remaining time during simulation
         int getDestination(); //returns the dock number for bike to be returned to
+        int getBikeID(); //returns the bike number
         int getLoanPeriod(); //returns the assigned loan period
         int getStartTime(); //returns time when loan period began
         int getRemainingTime(); //returns remaining time until loan period expires

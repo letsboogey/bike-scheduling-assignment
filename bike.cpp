@@ -24,6 +24,10 @@ bool Bike::loanExpired(){
     return (remaining_time) ? false : true ;
 }
 
+int Bike::getBikeID(){
+    return bike_number;
+}
+
 int Bike::getStartTime(){
     return start_time;
 }
