@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 #include "dockingstation.h"
 #include "bike.h"
 
@@ -60,25 +61,28 @@ int main(){
     cout << "\t\tWELCOME TO ACSE BIKES TRACKER\n\n" << endl;
     cout << "Current status of docking stations..." << endl;
 
-    cout << "\nDocking station 1:" << endl;
+    cout << "\nDocking station" << "\t\t\t\tBikes Available" << endl;
+    cout << "\n\t1\t\t\t";
     for(Bike b : vec1){
-        cout << "\tbike" << b.getBikeID() << endl;
+        cout << right << setw(8) << "bike-" << b.getBikeID();
     }
 
-    cout << "\nDocking station 2:" << endl;
+    cout << "\n\t2\t\t\t";
     for(Bike b : vec2){
-        cout << "\tbike" << b.getBikeID() << endl;
+        cout << right << setw(8) << "bike-" << b.getBikeID();
     }
 
-    cout << "\nDocking station 3:" << endl;
+    cout << "\n\t3\t\t\t";
     for(Bike b : vec3){
-        cout << "\tbike" << b.getBikeID() << endl;
+        cout << right << setw(8) <<  "bike-" << b.getBikeID();
     }
 
-    cout << "\nDocking station 4:" << endl;
+    cout << "\n\t4\t\t\t";
     for(Bike b : vec4){
-        cout << "\tbike" << b.getBikeID() << endl;
+        cout << right << setw(8) <<  "bike-" << b.getBikeID();
     }
+
+    cout << endl;
 
 
 
