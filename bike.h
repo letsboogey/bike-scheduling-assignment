@@ -12,7 +12,7 @@ class Bike
 {
     //variables
     private:
-        int bike_number, destination, loan_period, start_time, remaining_time;
+        int bike_number, destination, loan_period, start_time;
 
     //member functions
     public:
@@ -20,12 +20,11 @@ class Bike
         void setDestination(int); //set the dock number for bike return
         void setStartTime(int); //set the loan start time
         void setLoanPeriod(int); //set the loan period
+        bool loanExpired(int); //updates the remaining loan time
         int getDestination(); //returns the dock number for bike to be returned to
         int getBikeID(); //returns the bike number
         int getLoanPeriod(); //returns the assigned loan period
         int getStartTime(); //returns time when loan period began
-        int getRemainingTime(); //returns remaining time until loan period expires
-        bool loanExpired(); //checks if the loan period for bike has expired
         ~Bike(); //destructor
 };
 

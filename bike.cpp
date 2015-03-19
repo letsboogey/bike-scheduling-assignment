@@ -16,8 +16,9 @@ void Bike::setLoanPeriod(int period){
     loan_period = period;
 }
 
-bool Bike::loanExpired(){
-    return (remaining_time) ? false : true ;
+bool Bike::loanExpired(int min){
+    int expires_at = start_time + loan_period - 1;
+    return (min < expires_at) ? false : true;
 }
 
 int Bike::getBikeID(){
@@ -26,12 +27,6 @@ int Bike::getBikeID(){
 
 int Bike::getStartTime(){
     return start_time;
-}
-
-int Bike::getRemainingTime(){
-    loan_period -= 1;
-    remaining_time = loan_period;
-    return remaining_time;
 }
 
 int Bike::getLoanPeriod(){

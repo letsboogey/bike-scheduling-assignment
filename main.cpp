@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <string>
 #include <random>
-#include <time.h>
+#include <unistd.h>
 #include "dockingstation.h"
 #include "bike.h"
 
@@ -21,6 +21,7 @@ vector<Bike> vec1 , vec2 , vec3 , vec4;
 
 //vector to store bikes on loan
 vector<Bike> loanedBikes;
+vector<int> bikeIDs;
 
 struct input{
     int to;
@@ -33,10 +34,15 @@ void getUserInput(){
     cout << "Enter 1,2,3 or 4 to loan/return a bike from DS-1, DS-2, DS-3 or DS-4 respectively [ 0 to not loan ]...\n" << endl;
     cout << "Loan from: ";
     cin >> loan_from;
-    cout << "Return to: ";
-    cin >> return_to;
 
-    if(loan_from < 0 || return_to < 1 || loan_from > 4 || return_to > 4){
+    if(loan_from){
+        cout << "Return to: ";
+        cin >> return_to;
+    }else{
+        return_to = 0;
+    }
+
+    if(loan_from < 0 || loan_from > 4 || return_to > 4){
         cout << "\nError: Invalid input!" << endl;
         getUserInput();
     }else{
@@ -81,17 +87,58 @@ void printDockingStations(vector<Bike> v1,vector<Bike> v2,vector<Bike> v3,vector
     cout << "\n\n";
 }
 
-void printLoanedBikes(){
+void printLoanedBikes(int time){
 
     cout << "\n\nBikes currently on loan..." << endl;
     for(Bike onLoan : loanedBikes){
 
-        cout << "\tBike ID: " << onLoan.getBikeID() << endl;
-        cout << "\tReturn destination: " << onLoan.getDestination() <<endl;
-        cout << "\tLoan Period(minutes): " << onLoan.getLoanPeriod() << endl;
-        cout << "\tLoan start time(minute): " << onLoan.getStartTime() << endl;
-        cout << "\tRemaining loan time(minutes): " << onLoan.getRemainingTime() << endl;
-        cout << "\n" ;
+        if(onLoan.loanExpired(time)){
+            int ID = onLoan.getBikeID();
+            int destination = onLoan.getDestination();
+            switch (destination) {
+                case 1:
+                    if(find(bikeIDs.begin(), bikeIDs.end(), onLoan.getBikeID()) != bikeIDs.end()) {
+                        ds1.dockBike(onLoan);
+                        vec1.push_back(onLoan);
+                    }
+                    break;
+                case 2:
+                    if(find(bikeIDs.begin(), bikeIDs.end(), onLoan.getBikeID()) != bikeIDs.end()) {
+                        ds2.dockBike(onLoan);
+                        vec2.push_back(onLoan);
+                    }
+                    break;
+                case 3:
+                    if(find(bikeIDs.begin(), bikeIDs.end(), onLoan.getBikeID()) != bikeIDs.end()) {
+                        ds3.dockBike(onLoan);
+                        vec3.push_back(onLoan);
+                    }
+                    break;
+                case 4:
+                    if(find(bikeIDs.begin(), bikeIDs.end(), onLoan.getBikeID()) != bikeIDs.end()) {
+                        ds4.dockBike(onLoan);
+                        vec4.push_back(onLoan);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+
+            for(int i : bikeIDs){
+                if(i == ID){
+                    bikeIDs.erase(remove(bikeIDs.begin(), bikeIDs.end(), i), bikeIDs.end());
+                }
+            }
+
+        }else{
+            cout << "\tBike ID: " << onLoan.getBikeID() << endl;
+            cout << "\tReturn destination: " << onLoan.getDestination() <<endl;
+            cout << "\tLoan Period(minutes): " << onLoan.getLoanPeriod() << endl;
+            cout << "\tLoan start time(minute): " << onLoan.getStartTime() << endl;
+            cout << "\n" ;
+        }
+
     }
 }
 
@@ -139,14 +186,12 @@ int main(){
     }
 
     //BEGIN SIMULATION
-
     cout << "\t\tWELCOME TO ACSE BIKES TRACKER\n\n" << endl;
-
     //display list of bikes at each station
     printDockingStations(vec1,vec2,vec3,vec4);
 
     //begin 30 minute operation simulation
-    for(int min = 0 ; min < 30 ; min++){
+    for(int min = 1 ; min < 31 ; min++){
 
         //generate a random for loan period in range 1-30
         srand(time(NULL));
@@ -166,26 +211,84 @@ int main(){
                         loaned.setStartTime(min);
                         loaned.setLoanPeriod(loan_period);
                         loanedBikes.push_back(loaned);
+                        bikeIDs.push_back(loaned.getBikeID());
                         system("clear");
                         printDockingStations(vec1,vec2,vec3,vec4);
-                        printLoanedBikes();
+                        printLoanedBikes(min);
                     }else{
                         system("clear");
-                        cout << "Sorry, no bikes available for loan in DS-1" << endl;
+                        cout << "\n\nSorry, no bikes available for loan in DS-1, try another station in a moment..." << endl;
+                        sleep(5);
                         printDockingStations(vec1,vec2,vec3,vec4);
-                        printLoanedBikes();
+                        printLoanedBikes(min);
                         getUserInput();
                     }
-
                     break;
+
                 case 2:
-
+                    if(ds2.bikeAvailable()){
+                        Bike loaned = ds2.despatchBike();
+                        vec2.pop_back();
+                        loaned.setDestination(ret);
+                        loaned.setStartTime(min);
+                        loaned.setLoanPeriod(loan_period);
+                        loanedBikes.push_back(loaned);
+                        bikeIDs.push_back(loaned.getBikeID());
+                        system("clear");
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                    }else{
+                        system("clear");
+                        cout << "\n\nSorry, no bikes available for loan in DS-2, try another station in a moment..." << endl;
+                        sleep(5);
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                        getUserInput();
+                    }
                     break;
+
                 case 3:
-
+                    if(ds3.bikeAvailable()){
+                        Bike loaned = ds3.despatchBike();
+                        vec3.pop_back();
+                        loaned.setDestination(ret);
+                        loaned.setStartTime(min);
+                        loaned.setLoanPeriod(loan_period);
+                        loanedBikes.push_back(loaned);
+                        bikeIDs.push_back(loaned.getBikeID());
+                        system("clear");
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                    }else{
+                        system("clear");
+                        cout << "\n\nSorry, no bikes available for loan in DS-3, try another station in a moment..." << endl;
+                        sleep(5);
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                        getUserInput();
+                    }
                     break;
-                case 4:
 
+                case 4:
+                    if(ds4.bikeAvailable()){
+                        Bike loaned = ds4.despatchBike();
+                        vec4.pop_back();
+                        loaned.setDestination(ret);
+                        loaned.setStartTime(min);
+                        loaned.setLoanPeriod(loan_period);
+                        loanedBikes.push_back(loaned);
+                        bikeIDs.push_back(loaned.getBikeID());
+                        system("clear");
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                    }else{
+                        system("clear");
+                        cout << "\n\nSorry, no bikes available for loan in DS-4, try another station in a moment..." << endl;
+                        sleep(5);
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes(min);
+                        getUserInput();
+                    }
                     break;
                 default:
                     break;
@@ -196,17 +299,6 @@ int main(){
             continue;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
     return 0;
 }
