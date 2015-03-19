@@ -2,14 +2,6 @@
 
 Bike::Bike(int id){
     bike_number = id;
-    destination = 0;
-    loan_period = 0;
-    start_time = 0;
-    remaining_time = 0;
-}
-
-void Bike::updateLoan(){
-    (remaining_time) ? remaining_time-- : remaining_time ;
 }
 
 void Bike::setStartTime(int start){
@@ -18,6 +10,10 @@ void Bike::setStartTime(int start){
 
 void Bike::setDestination(int dest){
     destination = dest;
+}
+
+void Bike::setLoanPeriod(int period){
+    loan_period = period;
 }
 
 bool Bike::loanExpired(){
@@ -33,6 +29,8 @@ int Bike::getStartTime(){
 }
 
 int Bike::getRemainingTime(){
+    loan_period -= 1;
+    remaining_time = loan_period;
     return remaining_time;
 }
 

@@ -18,8 +18,8 @@ class Bike
     public:
         Bike(int); //constructor
         void setDestination(int); //set the dock number for bike return
-        void setStartTime(int); //set the loan period start time
-        void updateLoan(); //updates the remaining time during simulation
+        void setStartTime(int); //set the loan start time
+        void setLoanPeriod(int); //set the loan period
         int getDestination(); //returns the dock number for bike to be returned to
         int getBikeID(); //returns the bike number
         int getLoanPeriod(); //returns the assigned loan period

@@ -2,14 +2,61 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <string>
+#include <random>
+#include <time.h>
 #include "dockingstation.h"
 #include "bike.h"
 
 using namespace std;
 
+//variables
+int loan_period;
+
+//create the four docking stations
+DockingStation ds1 , ds2 , ds3 , ds4;
+
+//create four helper vectors to store list of bikes in each station for printing purposes
+vector<Bike> vec1 , vec2 , vec3 , vec4;
+
+//vector to store bikes on loan
+vector<Bike> loanedBikes;
+
+struct input{
+    int to;
+    int from;
+}fromto;
+
+//method to recieve input from the user
+void getUserInput(){
+    int loan_from, return_to;
+    cout << "Enter 1,2,3 or 4 to loan/return a bike from DS-1, DS-2, DS-3 or DS-4 respectively [ 0 to not loan ]...\n" << endl;
+    cout << "Loan from: ";
+    cin >> loan_from;
+    cout << "Return to: ";
+    cin >> return_to;
+
+    if(loan_from < 0 || return_to < 1 || loan_from > 4 || return_to > 4){
+        cout << "\nError: Invalid input!" << endl;
+        getUserInput();
+    }else{
+        fromto.from = loan_from;
+        fromto.to = return_to;
+    }
+}
+
 //prints the bikes docked in each docking station
 void printDockingStations(vector<Bike> v1,vector<Bike> v2,vector<Bike> v3,vector<Bike> v4 ){
+
+    cout << "Current status of docking stations..." << endl;
     cout << "\n  Docking station" << "\t\tBikes Available" << endl;
+
+    //ensure vector elements are printed from left - right
+    //this is because left-most element is the top of the stack
+    reverse(v1.begin(),v1.end());
+    reverse(v2.begin(),v2.end());
+    reverse(v3.begin(),v3.end());
+    reverse(v4.begin(),v4.end());
 
     cout << "\n\tDS-1\t\t ";
     for(Bike b : v1){
@@ -30,17 +77,27 @@ void printDockingStations(vector<Bike> v1,vector<Bike> v2,vector<Bike> v3,vector
     for(Bike b : v4){
         cout << setw(5)<< right << b.getBikeID();
     }
+
+    cout << "\n\n";
+}
+
+void printLoanedBikes(){
+
+    cout << "\n\nBikes currently on loan..." << endl;
+    for(Bike onLoan : loanedBikes){
+
+        cout << "\tBike ID: " << onLoan.getBikeID() << endl;
+        cout << "\tReturn destination: " << onLoan.getDestination() <<endl;
+        cout << "\tLoan Period(minutes): " << onLoan.getLoanPeriod() << endl;
+        cout << "\tLoan start time(minute): " << onLoan.getStartTime() << endl;
+        cout << "\tRemaining loan time(minutes): " << onLoan.getRemainingTime() << endl;
+        cout << "\n" ;
+    }
 }
 
 int main(){
 
     //SET STARTUP CONDITIONS
-
-    //create the four docking stations
-    DockingStation ds1 , ds2 , ds3 , ds4;
-
-    //create four helper vectors to store list of bikes in each station for printing purposes
-    vector<Bike> vec1 , vec2 , vec3 , vec4;
 
     //open file that contains the bikes
     ifstream bikes("bikes.txt");
@@ -84,11 +141,66 @@ int main(){
     //BEGIN SIMULATION
 
     cout << "\t\tWELCOME TO ACSE BIKES TRACKER\n\n" << endl;
-    cout << "Current status of docking stations..." << endl;
 
+    //display list of bikes at each station
     printDockingStations(vec1,vec2,vec3,vec4);
 
-    cout << endl;
+    //begin 30 minute operation simulation
+    for(int min = 0 ; min < 30 ; min++){
+
+        //generate a random for loan period in range 1-30
+        srand(time(NULL));
+        loan_period = rand()%30+1;
+
+        getUserInput();
+        if(fromto.from){
+            int loan = fromto.from;
+            int ret = fromto.to;
+
+            switch (loan){
+                case 1:
+                    if(ds1.bikeAvailable()){
+                        Bike loaned = ds1.despatchBike();
+                        vec1.pop_back();
+                        loaned.setDestination(ret);
+                        loaned.setStartTime(min);
+                        loaned.setLoanPeriod(loan_period);
+                        loanedBikes.push_back(loaned);
+                        system("clear");
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes();
+                    }else{
+                        system("clear");
+                        cout << "Sorry, no bikes available for loan in DS-1" << endl;
+                        printDockingStations(vec1,vec2,vec3,vec4);
+                        printLoanedBikes();
+                        getUserInput();
+                    }
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                default:
+                    break;
+            }
+
+
+        }else{
+            continue;
+        }
+    }
+
+
+
+
+
 
 
 
